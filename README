@@ -1,0 +1,84 @@
+
+#########################################################
+########## FADA (Fuzzy Array Dataflow Analysis ##########
+#########################################################
+
+
+*. Copyright:
+=============
+Open source code under LGPL copyright. 
+Authors: 
+  * Marouane Balaoucha (UVSQ - France), 
+  * Christophe Alias (INRIA - France)
+  * Denis Barthou (UVSQ - France)
+  * Sid Touati (UVSQ - France)
+
+
+*. Used software:
+=================
+FADAlib is partly based on a code from Christophe Alias (INRIA), which is a C++ implementation of ADA (Array Dataflow analysis [*]).
+ In addition, FADAlib uses piplib (www.piplib.org).
+
+[*] P. Feautrier, Dataflow analysis of scalar and array references, International Journal of Parallel Programming 20 (1) (1991) 23–52.
+
+
+0. Prerequis :
+==============
+ You need PipLib to be installed. Also, The boost header files.
+
+
+graphviz tool suites (especially 'dot'), and 'latex2html'  have to be installed if you want pretty printed results within html pages. And 'firefox' for vizualization.
+
+
+
+1. Installation :
+==================
+
+        Refer to instructions in 'INSTALL'
+
+
+2. Using FADAtool:
+===============
+
+    $ fadatool [options]
+
+
+Where options are :
+
+
+    => Options relative to the FADA processing :
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+		'--structural-analysis' or '-s' :  apply the structural analysis.
+	
+    => Options relative to the printing :
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+		'--format=FORMAT'		: where 'FORMAT' in {'html+tex','html+dot', 'console'}		
+		'--dir=dir' or '-d dir'		: set 'dir' as working and output directory ('./' is taken as default). if doesn't exist it will be created
+		'--tree' or '-T'		: print definitions in Quasi Affine Selection trees.
+		'--bottom' or '-b'		: consider a node 'bottom' for not initialized variables in the dataflow graph.
+		'--log' or'-L'			: write results in a file.
+		'--fuzzy' or '-f'		: remove constraints involving new parameters.
+		'--graph' or '-g'		: generate a dataflow graph.
+		'--verbose' or '-v'		: print extra information for debugging.
+		'--help' or '-h'		: print a help screen and exit.
+		'--version' or '-V'		: print the version and exit.
+
+		'--input=file' or '-i file'	: specify the input file.
+
+  Examples :
+
+   $ fadatool -i input.c
+        Perform dataflow analysis, results are printed in the standard output file.
+
+   $ fadatool -i input.c --format=html+tex 
+        Results are provided in html pages created in the directory 'dir'
+
+
+3. Contacts :
+=============
+fada-adaan@googlegroups.com
+marouane.belaoucha@prism.uvsq.fr, 
+denis.barthou@uvsq.fr, 
+sid.touati@uvsq.fr

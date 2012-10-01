@@ -1,0 +1,32 @@
+
+ 1. install piplib :  
+     You can download it here : www.piplib.org
+ 2. Download the Boost header files.
+     You can get it here: www.boost.org
+
+ 3. Building fada
+
+    $ cd ./fada
+    $ ./configure --with-boost=PATH_TO_BOOST
+
+  The script ./configure may not be able to find piplib headers and libraries, in such case you can use '--with-pip-include' and '--with-pip-lib' options :
+
+    $ ./configure --with-pip-include=PATH_TO_PIP_HEADERS --with-pip-lib=PATH_TO_PIP_LIBS
+                  --with-boost=PATH_TO_BOOST
+
+  Compiling sources :
+
+    $ make
+
+  and optionally
+  
+    # make install
+
+
+ PS:    You may need to update your LD_LIBRARY_PATH
+
+For any other question, please contact us  : 
+fada-adaan@googlegroups.com,
+marouane.belaoucha@prism.uvsq.fr,
+denis.barthou@uvsq.fr, 
+sid.touati@uvsq.fr

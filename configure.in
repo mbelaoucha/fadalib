@@ -1,0 +1,134 @@
+dnl dates are DD/MM/YYYY formated
+dnl 12/11/2008 : [Marouane Belaoucha] adding check macros for : piplib, dot, latex2html
+dnl 01/12/2008 : [Marouane Belaoucha] add options to pip-include and pip-lib
+dnl 09/06/2010 : [Marouane Belaoucha] add options to --with-pip
+
+AC_INIT(configure.in)
+
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(fada, 0.1.10)
+
+AC_LANG_CPLUSPLUS
+AC_PROG_CXX
+AM_PROG_LIBTOOL
+AM_PROG_CC_C_O
+
+LDFLAGS="-lpiplib64" 
+
+CFLAGS="-g  -gdwarf-2 -O2 -fpermissive -fomit-frame-pointer  -fexceptions -fno-rtti "
+CXXFLAGS=$CFLAGS
+
+dnl pip-include and pip-lib options
+GIVEN_BOOST_INCLUDE=no
+PATH_TO_BOOST_INCLUDE=
+
+AC_ARG_WITH(boost,
+	    [  --with-boost=PATH         path of pip include files ],
+	    [
+		CPPFLAGS="$CPPFLAGS -I${withval}"
+		PATH_TO_BOOST_INCLUDE=${withval}
+		GIVEN_BOOST_INCLUDE=yes
+	    ]
+	    )
+
+GIVEN_PIP_INCLUDE=no
+PATH_TO_PIP_INCLUDE=
+AC_ARG_WITH(pip-include,
+	    [  --with-pip-include=PATH         path of pip include files ],
+	    [
+		CPPFLAGS="$CPPFLAGS -I${withval}"
+		PATH_TO_PIP_INCLUDE=${withval}
+		GIVEN_PIP_INCLUDE=yes
+	    ]
+	    )
+GIVEN_PIP_LIB=no
+PATH_TO_PIP_LIB=
+AC_ARG_WITH(pip-lib,
+	[--with-pip-lib=PATH    path of libpiplib64.so],
+	[
+		LDFLAGS="$LDFLAGS -L${withval}"
+		PATH_TO_PIP_LIB="${withval}"
+		GIVEN_PIP_LIB=yes
+	]
+	)
+
+if test "x$GIVEN_PIP_INCLUDE" = "xno"; then
+   if test "x$GIVEN_PIP_LIB" = "xno"; then
+    AC_ARG_WITH(pip,
+	    [  --with-pip=PATH         path of pip installation path],
+	    [
+		CPPFLAGS="$CPPFLAGS -I${withval}/include"
+		PATH_TO_PIP_INCLUDE="${withval}/include"
+		GIVEN_PIP_INCLUDE="yes"
+
+		LDFLAGS="$LDFLAGS -L${withval}/lib"
+		PATH_TO_PIP_LIB="${withval}/lib"
+		GIVEN_PIP_LIB="yes"
+
+	    ]
+	    )
+   fi
+fi
+
+dnl echo "PIP_INCLUDE  = $PATH_TO_PIP_INCLUDE"
+dnl echo "PIP_LIB  = $PATH_TO_PIP_LIB"
+
+dnl look for libpiplib64.so and piplib/piplib64.h
+
+
+if test "x$GIVEN_BOOST_INCLUDE" = "xno"; then
+	AC_CHECK_HEADER(boost/config.hpp,[],[AC_MSG_ERROR([cannot find BOOST headers. You may use '--with-boost' option to locate it.])])
+fi
+
+if test "x$GIVEN_PIP_LIB" = "xno"; then
+	AC_CHECK_LIB(piplib64,pip_solve,,[AC_MSG_ERROR([cannot find libpiplib64.so. You may use '--with-pip-lib' option to locate it.])])
+else
+
+	if test -f "$PATH_TO_PIP_LIB/libpiplib64.so"; then
+		echo "'libpiplib64.so' found in: $PATH_TO_PIP_LIB"
+	else
+		AC_MSG_ERROR([can not find 'libpiplib64.so' in the given location.])
+	fi
+fi
+
+
+if test "x$GIVEN_PIP_INCLUDE" = "xno"; then
+	AC_CHECK_HEADER(piplib/piplib64.h,[],[AC_MSG_ERROR([can not find headers for piplib64. You can use '--with-pip-include' to locate it.])])
+else
+	if test -f "$PATH_TO_PIP_INCLUDE/piplib/piplib64.h"; then
+			echo "'piplib64.h' found in: $PATH_TO_PIP_INCLUDE"
+	else
+		AC_MSG_ERROR([can not find 'piplib/piplib64.h' in the given location.])
+	fi
+fi
+
+
+dnl looking for dot
+AC_PATH_PROG([DOT],[dot],[no])
+if test "$DOT" = "no"; then
+   echo "WARNING: dot is required for graphical pretty printing"
+fi
+
+
+AC_PATH_PROG([LATEX2HTML],[latex2html],[no])
+if test "$LATEX2HTML" = "no"; then
+   echo "WARNING:latex2html is required for graphical pretty printing"
+fi
+
+dnl Doing substitutions
+AC_SUBST(LDFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_OUTPUT(Makefile src/Makefile)
+
+
+# ======================================================================================
+dnl VERY IMPORTANT
+dnl during migration from fedora 10 to 11, i got some troubles when recompiling my fadalib. I got these errors:
+
+# ../libtool: fork: retry: Resource temporarily unavailable
+#../libtool: line 2097: Xdsf: command not found
+#../libtool: line 2105: mkdir /.libs: No such file or directory
+#mkdir: cannot create directory `/.libs': Permission denied
+
+dnl This error can be fixed by turning "$echo" into "$ECHO" in the "ltman.sh" file
+# ======================================================================================

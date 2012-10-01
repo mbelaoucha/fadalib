@@ -1,0 +1,8 @@
+
+new features:
+
+1. Enhanced symbolic constants detector
+2. Simple parallelism detector (based on no-loop-carried-dependencies)
+
+
+thanks,
