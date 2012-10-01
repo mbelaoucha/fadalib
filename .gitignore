@@ -10,3 +10,13 @@
 *.lai
 *.la
 *.a
+
+*.out
+*.tag
+*.E
+*.preprocessed
+*.html
+*.tex
+*.log
+*.tag
+*.cvs
